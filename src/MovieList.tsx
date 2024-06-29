@@ -4,6 +4,8 @@ import FilterGenres from './FilterGenres';
 import './MovieList.css';
 import FilmSearch from './FilmSearch';
 import Header from './Header';
+import Rating from './Rating'; 
+import LoginModal from './LoginModal';
 
 interface Movie {
   id: number;
@@ -13,20 +15,24 @@ interface Movie {
   poster: string;
   genre: string;
   release_year: number;
+  actors: { name: string; photo: string }[]; // Добавляем поле для актеров
 }
 
 function MovieList() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [selectedYear, setSelectedYear] = useState(
     localStorage.getItem('selectedYear') || '0'
-  ); // Получаем из localStorage
+  ); 
   const [selectedGenre, setSelectedGenre] = useState(
     localStorage.getItem('selectedGenre') || '0'
-  ); // Получаем из localStorage
+  ); 
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [moviesPerPage] = useState(10); 
-  const [isSearching, setIsSearching] = useState(false); // Отслеживаем, идет ли поиск
+  const [isSearching, setIsSearching] = useState(false); 
+  const [ratings, setRatings] = useState({}); // Состояние для хранения рейтингов
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const fetchAllMovies = async () => {
@@ -46,6 +52,11 @@ function MovieList() {
         } while (currentPage <= totalPages);
 
         setMovies(allMovies);
+        // Загружаем рейтинги из localStorage
+        const storedRatings = localStorage.getItem('ratings');
+        if (storedRatings) {
+          setRatings(JSON.parse(storedRatings));
+        }
       } catch (error) {
         console.error('Ошибка при получении данных о фильмах:', error);
       }
@@ -82,14 +93,35 @@ function MovieList() {
 
   // Обновляем currentPage при изменении фильмов, года или жанра
   useEffect(() => {
-    setCurrentPage(1); // Сбрасываем на первую страницу при фильтрации
-  }, [filteredMovies]); // Зависимость от filteredMovies
+    setCurrentPage(1); 
+  }, [filteredMovies]); 
 
   // Сохраняем выбранный год и жанр в localStorage
   useEffect(() => {
     localStorage.setItem('selectedYear', selectedYear);
     localStorage.setItem('selectedGenre', selectedGenre);
-  }, [selectedYear, selectedGenre]);
+    // Сохраняем рейтинги в localStorage
+    localStorage.setItem('ratings', JSON.stringify(ratings));
+  }, [selectedYear, selectedGenre, ratings]);
+
+  useEffect(() => {
+    // Проверяем наличие токена при инициализации
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Удаляем токен и отключаем авторизацию
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+  };
+
+  const handleLoginSuccess = (token: string) => {
+    // Функция для успешной авторизации
+    setIsLoggedIn(true);
+  };
 
   const handleYearChange = (year: string) => {
     setSelectedYear(year); 
@@ -101,6 +133,17 @@ function MovieList() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleRatingChange = (movieId: number, rating: number) => {
+    if (!isLoggedIn) {
+      // Если пользователь не авторизован, показываем модальное окно
+      setShowLoginModal(true);
+      return; // Выходим из функции
+    }
+
+    // Если авторизован, обновляем рейтинги
+    setRatings({ ...ratings, [movieId]: rating });
   };
 
   const indexOfLastMovie = currentPage * moviesPerPage;
@@ -115,13 +158,30 @@ function MovieList() {
 
   return (
     <div>
-      <Header/>
+      <Header />
       <div className='main'>
-      <FilterYears onYearChange={handleYearChange} /> {/* Передаем selectedYear */}
-      <FilterGenres onGenreChange={handleGenreChange}  /> {/* Передаем selectedGenre */}
+      {isLoggedIn ? (
+        <div>
+          {/* Кнопка "Выйти" */}
+          <button onClick={handleLogout}>Выйти</button>
+        </div>
+      ) : (
+        <div>
+          {/* Кнопка "Войти" */}
+          <button onClick={() => setShowLoginModal(true)}>Войти</button>
+          {showLoginModal && (
+            <LoginModal
+              onClose={() => setShowLoginModal(false)}
+              onSuccessLogin={handleLoginSuccess}
+            />
+          )}
+        </div>
+      )}
+
+      <FilterYears onYearChange={handleYearChange} /> 
+      <FilterGenres onGenreChange={handleGenreChange}  /> 
       <FilmSearch setIsSearching={setIsSearching}/> 
-      {/* Передаем функцию для изменения isSearching */}
-      
+
       {isSearching ? ( 
         <div className='search-results'> 
         </div>
@@ -129,21 +189,32 @@ function MovieList() {
         <div > 
           {currentMovies.map((movie) => (
             <div key={movie.id} className="movie-card">
-              <h3 className='movie-title'>{movie.title}</h3>
-              <div>
+              <div className="movie-card-content">
+                <h3 className='movie-title'>{movie.title}</h3>
                 <div>
-                  <p className='title-txt'>Жанр:</p>
-                  <p>{movie.genre}</p>
-                </div>
-                <div>
-                  <p>Год Выпуска:</p>
-                  <p>{movie.release_year}</p>
-                </div>
-                <div>
-                  <p>Описание:</p>
-                  <p>{movie.description}</p>
+                  <div>
+                    <p className='title-txt'>Жанр:</p>
+                    <p>{movie.genre}</p>
+                  </div>
+                  <div>
+                    <p>Год Выпуска:</p>
+                    <p>{movie.release_year
+                    }</p>
+                  </div>
+                  <div>
+                    <p>Описание:</p>
+                    <p>{movie.description}</p>
+                  </div>
+                  
                 </div>
               </div>
+              {isLoggedIn && (
+              <Rating
+                movieId={movie.id}
+                initialRating={0} // Передаем начальный рейтинг
+                onRatingChange={handleRatingChange} // Передаем handleRatingChange
+              />
+              )}
             </div>
           ))}
         </div>

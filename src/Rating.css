@@ -1,0 +1,16 @@
+.rating {
+  display: flex;
+  align-items: center;
+}
+
+.star {
+  font-size: 24px; 
+  color: #ccc; 
+  cursor: pointer;
+  margin-right: 5px; 
+}
+
+.filled {
+  color: gold; 
+}
+  
