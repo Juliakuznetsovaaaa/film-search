@@ -1,0 +1,17 @@
+.movie-card{
+    width: Fixed (1,424px)px;
+    height: Hug (208px)px;
+    padding: 24px;
+    gap: 24px;
+    border-radius: 8px;
+}
+.movie-title{
+    font-family: Roboto;
+font-size: 20px;
+font-weight: 600;
+line-height: 20px;
+text-align: left;
+}
+.main{
+    margin-top: 88px;
+}
