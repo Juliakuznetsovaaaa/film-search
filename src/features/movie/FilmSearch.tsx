@@ -74,7 +74,7 @@ const FilmSearch: React.FC<Props> = ({ setIsSearching, isLoggedIn, onRatingChang
         
       </div>
       
-      {!isLoading && searchResults.length > 0 && (
+      {searchResults.length > 0 && (
         <div className="search-results">
           {searchResults.map((movie) => (
             <MovieCard 
