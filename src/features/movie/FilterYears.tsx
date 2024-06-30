@@ -15,7 +15,7 @@ function FilterYears({ onYearChange }: { onYearChange: (year: string) => void })
   
     return (
       <div className="year">
-        <h4 className="year__title">Год выпуска</h4>
+        <h3 className="year__title">Год выпуска</h3>
         <select
           value={selectedYear}
           onChange={(e) => {

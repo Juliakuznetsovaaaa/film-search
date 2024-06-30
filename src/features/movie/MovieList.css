@@ -1,8 +1,7 @@
 .movie-card {
-    width: Fixed (1, 424px) px;
-    height: Hug (208px) px;
-    padding: 24px;
-    gap: 24px;
+
+ margin-left: 20px;
+    gap: 10px;
     border-radius: 8px;
   }
   .movie-title {
@@ -14,8 +13,11 @@
   }
   .main {
     margin-top: 88px;
+    
   }
-  
+  body{
+    background-color: #EDEDED;
+  }
   .login-btn {
     background-color: #ff5500;
     color: white;
@@ -91,4 +93,6 @@
     align-items: center;
     justify-content: center;
   }
-  
+  .main-content{
+    display: flex;
+  }

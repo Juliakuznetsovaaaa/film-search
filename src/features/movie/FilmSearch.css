@@ -1,0 +1,17 @@
+.search-bar{
+margin-top: 20px;
+display: flex;
+flex-direction: row;
+align-items: center;
+width: Fixed (400px)px;
+height: Hug (40px)px;
+padding: 12px;
+gap: 8px;
+border-radius: 8px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+}

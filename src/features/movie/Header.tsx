@@ -4,7 +4,7 @@ import './Header.css';
 const Header: React.FC = () => {
   return (
     <header className="header">
-      <h1>Кинотеатр</h1>
+      <h1>Фильмопоиск</h1>
     </header>
   );
 };

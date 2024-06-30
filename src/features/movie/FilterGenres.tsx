@@ -20,7 +20,8 @@ function FilterGenres({ onGenreChange }: { onGenreChange: (genre: string) => voi
   const [selectedGenre, setSelectedGenre] = useState('0');
 
   return (
-    <div>
+    <div className="year">
+      <h3 className="year__title">Жанр</h3>
       <select value={selectedGenre} onChange={(e) => {
         setSelectedGenre(e.target.value);
         const selectedGenreKey = e.target.value;

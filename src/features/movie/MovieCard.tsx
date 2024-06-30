@@ -2,12 +2,14 @@
 import React from 'react';
 import Rating from './Rating';
 import { useNavigate } from 'react-router-dom';
+import './MovieCard.css'
 
 interface MovieCardProps {
   movie: {
     id: number;
     title: string;
     description: string;
+    poster: string;
     genre: string;
     release_year: number;
   };
@@ -23,8 +25,13 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, isLoggedIn, onRatingChange
   };
 
   return (
+    <div className='card-content'>
     <div className="movie-card-content">
-      <h3 className="movie-title">{movie.title}</h3>
+    <img src={movie.poster} alt={movie.title} className="movie-post"></img>
+    </div>
+    <div>
+        <div className='head'>
+        <h3 className="movie-title">{movie.title}</h3>
       {isLoggedIn && (
         <Rating
         movieId={movie.id}
@@ -33,20 +40,24 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, isLoggedIn, onRatingChange
         isLoggedIn={isLoggedIn}
         />
       )}
+        </div>
+      
       <div className="movie-card" onClick={handleMovieClick}>
-        <div>
-          <p className="title-txt">Жанр:</p>
-          <p>{movie.genre}</p>
+        <div className="text-card">
+          <span className="title-txt">Жанр:
+          <span className="desc-txt">  {movie.genre}</span></span>
         </div>
-        <div>
-          <p>Год Выпуска:</p>
-          <p>{movie.release_year}</p>
+        <div  className="text-card">
+          <span className="title-txt">Год Выпуска:
+          <span className="desc-txt">  {movie.release_year}</span></span>
         </div>
-        <div>
-          <p>Описание:</p>
-          <p>{movie.description}</p>
+        <div  className="text-card">
+          <span className="title-txt">Описание:
+          <span className="desc-txt">{movie.description}</span></span>
         </div>
       </div>
+        
+    </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import MovieCard from './MovieCard'; // Импортируем MovieCard
-
+import './FilmSearch.css';
 interface Movie {
   id: number;
   title: string;
@@ -62,17 +62,16 @@ const FilmSearch: React.FC<Props> = ({ setIsSearching, isLoggedIn, onRatingChang
 
   return (
     <div className="film-search">
-      <h2>Поиск фильма</h2>
-      <div className="search-bar">
+
+      <div>
         <input
           type="text"
-          placeholder="Введите название фильма"
+           className="search-bar"
+          placeholder="Название фильма"
           value={searchTerm}
           onChange={handleChange}
         />
-        <button onClick={handleSearch} disabled={isLoading}>
-          {isLoading ? 'Поиск...' : 'Искать'}
-        </button>
+        
       </div>
       
       {!isLoading && searchResults.length > 0 && (

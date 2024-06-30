@@ -155,16 +155,16 @@ function MovieList() {
   }
 
   return (
-    <div>
+    <div className='global-content'>
       <Header />
       <div className='main'>
       {isLoggedIn ? (
         <div>
-          <button onClick={handleLogout}>Выйти</button>
+          <button className='logout-btn' onClick={handleLogout}>Выйти</button>
         </div>
       ) : (
         <div>
-          <button onClick={() => setShowLoginModal(true)}>Войти</button>
+          <button className='login-btn' onClick={() => setShowLoginModal(true)}>Войти</button>
           {showLoginModal && (
             <LoginModal
               onClose={() => setShowLoginModal(false)}
@@ -173,51 +173,57 @@ function MovieList() {
           )}
         </div>
       )}
-      
-      <FilterYears onYearChange={handleYearChange} /> 
-      <FilterGenres onGenreChange={handleGenreChange}  /> 
+      <div className='main-content'>
+      <div>
+        <FilterYears onYearChange={handleYearChange} /> 
+        <FilterGenres onGenreChange={handleGenreChange}  /> 
+      </div>
+      <div>
       <FilmSearch setIsSearching={setIsSearching} isLoggedIn={isLoggedIn} onRatingChange={handleRatingChange}/> 
 
-      {isSearching ? (
-        <div className='search-results'>
-        </div>
-      ) : (
-        <div>
-          {currentMovies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-              isLoggedIn={isLoggedIn}
-              onRatingChange={handleRatingChange}
-            />
-          ))}
-        </div>
-      )}
+{isSearching ? (
+  <div className='search-results'>
+  </div>
+) : (
+  <div>
+    {currentMovies.map((movie) => (
+      <MovieCard
+        key={movie.id}
+        movie={movie}
+        isLoggedIn={isLoggedIn}
+        onRatingChange={handleRatingChange}
+      />
+    ))}
+  </div>
+)}
 
-      <div>
-        <button 
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Предыдущая
-        </button>
+<div>
+  <button 
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1}
+  >
+    Предыдущая
+  </button>
 
-        {pageNumbers.map((number) => (
-          <button 
-            key={number} 
-            onClick={() => handlePageChange(number)}
-            className={currentPage === number ? 'active' : ''}
-          >
-            {number}
-          </button>
-        ))}
+  {pageNumbers.map((number) => (
+    <button 
+      key={number} 
+      onClick={() => handlePageChange(number)}
+      className={currentPage === number ? 'active' : ''}
+    >
+      {number}
+    </button>
+  ))}
 
-        <button 
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Следующая
-        </button>
+  <button 
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === totalPages}
+  >
+    Следующая
+  </button>
+</div>
+      </div>
+     
       </div>
       </div>
       </div>
