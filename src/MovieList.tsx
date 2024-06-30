@@ -6,6 +6,7 @@ import FilmSearch from './FilmSearch';
 import Header from './Header';
 import Rating from './Rating'; 
 import LoginModal from './LoginModal';
+import { useNavigate } from 'react-router-dom'; // Импортируем useNavigate
 
 interface Movie {
   id: number;
@@ -33,6 +34,7 @@ function MovieList() {
   const [ratings, setRatings] = useState({}); // Состояние для хранения рейтингов
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const navigate = useNavigate(); // Инициализируем useNavigate
 
   useEffect(() => {
     const fetchAllMovies = async () => {
@@ -156,10 +158,14 @@ function MovieList() {
     pageNumbers.push(i);
   }
 
+  const handleMovieClick = (movieId: number) => {
+    navigate(`/movie/${movieId}`);
+  }
+
   return (
     <div>
       <Header />
-      <div className='main'>
+      
       {isLoggedIn ? (
         <div>
           {/* Кнопка "Выйти" */}
@@ -177,7 +183,7 @@ function MovieList() {
           )}
         </div>
       )}
-
+      
       <FilterYears onYearChange={handleYearChange} /> 
       <FilterGenres onGenreChange={handleGenreChange}  /> 
       <FilmSearch setIsSearching={setIsSearching}/> 
@@ -186,11 +192,15 @@ function MovieList() {
         <div className='search-results'> 
         </div>
       ) : (
-        <div > 
+        <div>
           {currentMovies.map((movie) => (
-            <div key={movie.id} className="movie-card">
+            <div 
+              key={movie.id} 
+              className="movie-card"
+              onClick={() => handleMovieClick(movie.id)} // Добавляем обработчик клика
+            >
               <div className="movie-card-content">
-                <h3 className='movie-title'>{movie.title}</h3>
+              <h3 className='movie-title'>{movie.title}</h3>
                 <div>
                   <div>
                     <p className='title-txt'>Жанр:</p>
@@ -247,7 +257,7 @@ function MovieList() {
       </div>
       </div>
       
-    </div>
+ 
   );
 }
 
