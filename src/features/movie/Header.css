@@ -1,0 +1,25 @@
+.header {
+  position: fixed; /* Фиксируем плашку на странице */
+  top: 0; /* Позиционируем плашку сверху */
+  left: 0; /* Позиционируем плашку слева */
+  width: 100%; /* Занимаем всю ширину экрана */
+  height: 88px; /* Высота плашки 88 пикселей */
+  background-color: #333333; /* Цвет фона плашки */
+  z-index: 10; /* Устанавливаем z-index, чтобы плашка находилась сверху других элементов */
+  display: flex; /* Размещаем элементы внутри плашки в строку */
+  justify-content: space-between; /* Выравниваем элементы по краям плашки */
+  align-items: center; /* Выравниваем элементы по центру по вертикали */
+}
+
+/* Добавьте стили для элементов внутри плашки */
+.header h1 {
+  margin: 0;
+  color: white;
+  margin: 26px 0 26px 32px;
+  font-size: 32px;
+  letter-spacing: 0%;
+  line-height: auto;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  font-style: normal;
+}

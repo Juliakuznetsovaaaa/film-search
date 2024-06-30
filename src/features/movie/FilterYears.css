@@ -1,0 +1,10 @@
+.year select {
+  width: 360px;
+  height: 40px;
+  padding: 10px 44px 10px 16px;
+  border-radius: 8px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #E1E3E6;
+  position: relative;
+}

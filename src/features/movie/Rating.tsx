@@ -5,14 +5,17 @@ interface RatingProps {
   movieId: number;
   initialRating: number;
   onRatingChange: (movieId: number, rating: number) => void;
+  isLoggedIn: boolean; // Добавляем isLoggedIn в props
 }
 
-const Rating: React.FC<RatingProps> = ({ movieId, initialRating, onRatingChange }) => {
+const Rating: React.FC<RatingProps> = ({ movieId, initialRating, onRatingChange, isLoggedIn }) => {
   const [selectedRating, setSelectedRating] = useState(initialRating);
 
   const handleRatingClick = (rating: number) => {
     setSelectedRating(rating);
-    onRatingChange(movieId, rating); // Вызываем onRatingChange
+    if (isLoggedIn) {
+      onRatingChange(movieId, rating); // Вызываем onRatingChange только если пользователь авторизован
+    }
   };
 
   const stars = [];
@@ -28,10 +31,9 @@ const Rating: React.FC<RatingProps> = ({ movieId, initialRating, onRatingChange 
     );
   }
 
-  // Return the JSX for the Rating component
   return (
     <div className="rating">
-      {stars}
+      {isLoggedIn ? stars : ""} {/* Показывать звезды только если пользователь авторизован */}
     </div>
   );
 };

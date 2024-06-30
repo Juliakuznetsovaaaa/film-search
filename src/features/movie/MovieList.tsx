@@ -5,8 +5,9 @@ import './MovieList.css';
 import FilmSearch from './FilmSearch';
 import Header from './Header';
 import Rating from './Rating'; 
-import LoginModal from './LoginModal';
-import { useNavigate } from 'react-router-dom'; // Импортируем useNavigate
+import LoginModal from '../auth/LoginModal';
+import { useNavigate } from 'react-router-dom'; 
+import MovieCard from './MovieCard';
 
 interface Movie {
   id: number;
@@ -16,7 +17,7 @@ interface Movie {
   poster: string;
   genre: string;
   release_year: number;
-  actors: { name: string; photo: string }[]; // Добавляем поле для актеров
+  actors: { name: string; photo: string }[]; 
 }
 
 function MovieList() {
@@ -31,10 +32,10 @@ function MovieList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [moviesPerPage] = useState(10); 
   const [isSearching, setIsSearching] = useState(false); 
-  const [ratings, setRatings] = useState({}); // Состояние для хранения рейтингов
+  const [ratings, setRatings] = useState({}); 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const navigate = useNavigate(); // Инициализируем useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAllMovies = async () => {
@@ -45,7 +46,7 @@ function MovieList() {
 
         do {
           const response = await fetch(
-            `http://localhost:3030/api/v1/search?page=${currentPage}`
+           `http://localhost:3030/api/v1/search?page=${currentPage}`
           );
           const data = await response.json();
           allMovies.push(...data.search_result);
@@ -67,9 +68,7 @@ function MovieList() {
     fetchAllMovies();
   }, []);
 
-  // Фильтрация должна запускаться после изменения фильмов, года или жанра
   useEffect(() => {
-    // Фильтруем список по году и жанру
     const filtered = movies.filter((movie) => {
       if (selectedYear !== '0') {
         if (selectedYear.includes('-')) {
@@ -93,21 +92,17 @@ function MovieList() {
     setFilteredMovies(filtered);
   }, [movies, selectedYear, selectedGenre]);
 
-  // Обновляем currentPage при изменении фильмов, года или жанра
   useEffect(() => {
     setCurrentPage(1); 
   }, [filteredMovies]); 
 
-  // Сохраняем выбранный год и жанр в localStorage
   useEffect(() => {
     localStorage.setItem('selectedYear', selectedYear);
     localStorage.setItem('selectedGenre', selectedGenre);
-    // Сохраняем рейтинги в localStorage
     localStorage.setItem('ratings', JSON.stringify(ratings));
   }, [selectedYear, selectedGenre, ratings]);
 
   useEffect(() => {
-    // Проверяем наличие токена при инициализации
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
@@ -115,13 +110,11 @@ function MovieList() {
   }, []);
 
   const handleLogout = () => {
-    // Удаляем токен и отключаем авторизацию
     localStorage.removeItem('token');
     setIsLoggedIn(false);
   };
 
   const handleLoginSuccess = (token: string) => {
-    // Функция для успешной авторизации
     setIsLoggedIn(true);
   };
 
@@ -137,15 +130,14 @@ function MovieList() {
     setCurrentPage(page);
   };
 
-  const handleRatingChange = (movieId: number, rating: number) => {
+  // Функция для отправки рейтинга на сервер
+  const handleRatingChange = async (movieId: number, rating: number) => {
     if (!isLoggedIn) {
-      // Если пользователь не авторизован, показываем модальное окно
       setShowLoginModal(true);
-      return; // Выходим из функции
+      return;
     }
 
-    // Если авторизован, обновляем рейтинги
-    setRatings({ ...ratings, [movieId]: rating });
+ 
   };
 
   const indexOfLastMovie = currentPage * moviesPerPage;
@@ -165,15 +157,13 @@ function MovieList() {
   return (
     <div>
       <Header />
-      
+      <div className='main'>
       {isLoggedIn ? (
         <div>
-          {/* Кнопка "Выйти" */}
           <button onClick={handleLogout}>Выйти</button>
         </div>
       ) : (
         <div>
-          {/* Кнопка "Войти" */}
           <button onClick={() => setShowLoginModal(true)}>Войти</button>
           {showLoginModal && (
             <LoginModal
@@ -186,46 +176,20 @@ function MovieList() {
       
       <FilterYears onYearChange={handleYearChange} /> 
       <FilterGenres onGenreChange={handleGenreChange}  /> 
-      <FilmSearch setIsSearching={setIsSearching}/> 
+      <FilmSearch setIsSearching={setIsSearching} isLoggedIn={isLoggedIn} onRatingChange={handleRatingChange}/> 
 
-      {isSearching ? ( 
-        <div className='search-results'> 
+      {isSearching ? (
+        <div className='search-results'>
         </div>
       ) : (
         <div>
           {currentMovies.map((movie) => (
-            <div 
-              key={movie.id} 
-              className="movie-card"
-              onClick={() => handleMovieClick(movie.id)} // Добавляем обработчик клика
-            >
-              <div className="movie-card-content">
-              <h3 className='movie-title'>{movie.title}</h3>
-                <div>
-                  <div>
-                    <p className='title-txt'>Жанр:</p>
-                    <p>{movie.genre}</p>
-                  </div>
-                  <div>
-                    <p>Год Выпуска:</p>
-                    <p>{movie.release_year
-                    }</p>
-                  </div>
-                  <div>
-                    <p>Описание:</p>
-                    <p>{movie.description}</p>
-                  </div>
-                  
-                </div>
-              </div>
-              {isLoggedIn && (
-              <Rating
-                movieId={movie.id}
-                initialRating={0} // Передаем начальный рейтинг
-                onRatingChange={handleRatingChange} // Передаем handleRatingChange
-              />
-              )}
-            </div>
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              isLoggedIn={isLoggedIn}
+              onRatingChange={handleRatingChange}
+            />
           ))}
         </div>
       )}
@@ -254,6 +218,7 @@ function MovieList() {
         >
           Следующая
         </button>
+      </div>
       </div>
       </div>
       

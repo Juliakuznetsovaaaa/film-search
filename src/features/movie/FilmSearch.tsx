@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import MovieCard from './MovieCard'; // Импортируем MovieCard
 
 interface Movie {
   id: number;
@@ -13,9 +14,11 @@ interface Movie {
 
 interface Props {
   setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoggedIn: boolean; // Добавляем isLoggedIn в props
+  onRatingChange: (movieId: number, rating: number) => void; // Добавляем onRatingChange в props
 }
 
-const FilmSearch: React.FC<Props> = ({ setIsSearching }) => {
+const FilmSearch: React.FC<Props> = ({ setIsSearching, isLoggedIn, onRatingChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,22 +75,19 @@ const FilmSearch: React.FC<Props> = ({ setIsSearching }) => {
         </button>
       </div>
       
-      {isLoading && <p className="loading">Поиск...</p>}
       {!isLoading && searchResults.length > 0 && (
-        <ul className="search-results">
+        <div className="search-results">
           {searchResults.map((movie) => (
-            <li key={movie.id} className="search-result">
-              <div>
-                <h3>{movie.title}</h3>
-                <p>Рейтинг: {movie.rating}</p>
-                <p>Жанр: {movie.genre}</p>
-                <p>Год: {movie.release_year}</p>
-              </div>
-            </li>
+            <MovieCard 
+              key={movie.id} 
+              movie={movie}
+              isLoggedIn={isLoggedIn} // Передаем isLoggedIn в MovieCard
+              onRatingChange={onRatingChange} // Передаем onRatingChange в MovieCard
+            />
           ))}
-        </ul>
+        </div>
       )}
-      {!isLoading && searchResults.length === 0 && searchTerm.length!=0 && (
+      {!isLoading && searchResults.length === 0 && searchTerm.length>=3 && (
         <p className="no-results">Фильмы не найдены</p>
       )}
     </div>

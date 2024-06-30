@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./FilterYears.css"; 
 
 const YEARS = {
     '0': 'Не выбран',
@@ -13,11 +14,15 @@ function FilterYears({ onYearChange }: { onYearChange: (year: string) => void })
     const [selectedYear, setSelectedYear] = useState('0');
   
     return (
-      <div>
-        <select value={selectedYear} onChange={(e) => {
-          setSelectedYear(e.target.value);
-          onYearChange(e.target.value); 
-        }}>
+      <div className="year">
+        <h4 className="year__title">Год выпуска</h4>
+        <select
+          value={selectedYear}
+          onChange={(e) => {
+            setSelectedYear(e.target.value);
+            onYearChange(e.target.value);
+          }}
+        >
           {Object.entries(YEARS).map(([key, value]) => (
             <option key={key} value={key}>
               {value}

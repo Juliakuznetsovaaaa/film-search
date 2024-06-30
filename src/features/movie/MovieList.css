@@ -1,0 +1,94 @@
+.movie-card {
+    width: Fixed (1, 424px) px;
+    height: Hug (208px) px;
+    padding: 24px;
+    gap: 24px;
+    border-radius: 8px;
+  }
+  .movie-title {
+    font-family: Roboto;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: left;
+  }
+  .main {
+    margin-top: 88px;
+  }
+  
+  .login-btn {
+    background-color: #ff5500;
+    color: white;
+    width: 72px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed; /* Фиксируем плашку на странице */
+    top: 24px; /* Позиционируем плашку сверху */
+    right: 32px;
+    z-index: 10; /* Устанавливаем z-index, чтобы плашка находилась сверху других элементов */
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .logout-btn {
+    background-color: inherit;
+    color: #ff5500;
+    width: 72px;
+    height: 40px;
+    border: solid 1px #ff5500;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed; /* Фиксируем плашку на странице */
+    top: 24px; /* Позиционируем плашку сверху */
+    right: 32px;
+    z-index: 10; /* Устанавливаем z-index, чтобы плашка находилась сверху других элементов */
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .icon {
+    position: fixed;
+    top: 24px; /* Позиционируем плашку сверху */
+    right: 124px;
+    z-index: 10;
+  }
+  
+  .filter {
+    position: absolute;
+    top: 108px;
+    left: 32px;
+    width: 408px;
+    height: 232px;
+    border-radius: 8px;
+    padding: 24px;
+    background-color: white;
+  }
+  
+  .filter__title {
+      font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    color: #000000;
+  
+    margin-bottom: 20px;
+  }
+  
+  .login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
